@@ -1,0 +1,23 @@
+title,tags,file_path
+PUA - Process Hacker Driver Load,attack.t1543,rules/windows/driver_load/driver_load_win_pua_process_hacker.yml
+PUA - System Informer Driver Load,attack.t1543,rules/windows/driver_load/driver_load_win_pua_system_informer.yml
+Suspicious Driver Install by pnputil.exe,attack.t1547,rules/windows/process_creation/proc_creation_win_lolbin_susp_driver_installed_by_pnputil.yml
+Suspicious GrpConv Execution,attack.t1547,rules/windows/process_creation/proc_creation_win_lolbin_susp_grpconv.yml
+PUA - Process Hacker Execution,attack.t1622;attack.t1564;attack.t1543,rules/windows/process_creation/proc_creation_win_pua_process_hacker.yml
+PUA - System Informer Execution,attack.t1082;attack.t1564;attack.t1543,rules/windows/process_creation/proc_creation_win_pua_system_informer.yml
+Registry Persistence Mechanisms in Recycle Bin,attack.t1547,rules/windows/registry/registry_event/registry_event_persistence_recycle_bin.yml
+WINEKEY Registry Modification,attack.t1547,rules/windows/registry/registry_event/registry_event_runkey_winekey.yml
+Atbroker Registry Change,attack.t1218;attack.t1547,rules/windows/registry/registry_event/registry_event_susp_atbroker_change.yml
+Potential RipZip Attack on Startup Folder,attack.t1547,rules/windows/file/file_event/file_event_win_ripzip_attack.yml
+CodeIntegrity - Blocked Image/Driver Load For Policy Violation,attack.t1543,rules/windows/builtin/code_integrity/win_codeintegrity_enforced_policy_block.yml
+CodeIntegrity - Blocked Driver Load With Revoked Certificate,attack.t1543,rules/windows/builtin/code_integrity/win_codeintegrity_revoked_driver_blocked.yml
+Service Installed By Unusual Client - Security,attack.t1543,rules/windows/builtin/security/win_security_service_installation_by_unusal_client.yml
+Startup/Logon Script Added to Group Policy Object,attack.t1484.001;attack.t1547,rules/windows/builtin/security/win_security_susp_group_policy_startup_script_added_to_gpo.yml
+KrbRelayUp Service Installation,attack.t1543,rules/windows/builtin/system/service_control_manager/win_system_krbrelayup_service_installation.yml
+Service Installed By Unusual Client - System,attack.t1543,rules/windows/builtin/system/service_control_manager/win_system_service_install_sups_unusal_client.yml
+ESXi Account Creation Via ESXCLI,attack.t1136;attack.t1059.012,rules/linux/process_creation/proc_creation_lnx_esxcli_user_account_creation.yml
+AWS ElastiCache Security Group Created,attack.t1136;attack.t1136.003,rules/cloud/aws/cloudtrail/aws_elasticache_security_group_created.yml
+New Kubernetes Service Account Created,attack.t1136,rules/application/kubernetes/audit/kubernetes_audit_serviceaccount_creation.yml
+Usage Of Malicious POORTRY Signed Driver,attack.t1543;attack.t1068,deprecated/windows/driver_load_win_mal_poortry_driver.yml
+Vulnerable Dell BIOS Update Driver Load,attack.t1543;attack.t1068,deprecated/windows/driver_load_win_vuln_dell_driver.yml
+Vulnerable Lenovo Driver Load,attack.t1543,deprecated/windows/driver_load_win_vuln_lenovo_driver.yml
