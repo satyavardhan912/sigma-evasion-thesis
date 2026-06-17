@@ -1,0 +1,14 @@
+# Python virtual environment (rebuilt from requirements.txt, never committed)
+.venv/
+
+# Third-party SigmaHQ rules (reproduced via recorded commit hash, not vendored)
+sigma-repo/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS / editor cruft
+Thumbs.db
+.DS_Store
+.vscode/
