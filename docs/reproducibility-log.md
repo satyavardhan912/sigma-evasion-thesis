@@ -34,3 +34,5 @@ updated after this point.
 | Date | Entry |
 |------|-------|
 | 2026-06-17 | Environment set up (Python 3.14, pandas, PyYAML). SigmaHQ cloned and pinned at commit `98781da`. 4192 YAML files in repo. |
+| 2026-06-17 | Corpus finalised: 66 rules (T1547.001: 34, T1543.003: 28, T1136.001: 4). Built by tag-match (113 raw) -> scope (Windows-only; drop deprecated/unsupported; set aside process-creation and PowerShell) -> manual review (added 5 parent-only in-scope rules, removed 7 driver-load BYOVD/IOC rules). |
+| 2026-06-17 | Telemetry audit: all 66 rules producible -> Week-4 gate cleared at Tier 1 (all three techniques testable). Lab telemetry: Sysmon (registry 12/13/14, file 11), System log (SCM 7045), Security log + audit policy (account 4720, service 4697). |
