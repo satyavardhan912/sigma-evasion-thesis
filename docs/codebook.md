@@ -144,3 +144,41 @@ dominate; insertion, omission, and reordering are command-line-bound and do not
 apply to the path/identifier fields most persistence rules match. Account is
 narrowest (identifier-only); service widest (command-like ImagePath). The
 empirical results test this hypothesis.
+
+
+# Part 3 - Rule-breadth judgment (SQ3 instrument)
+
+False-positive proneness is rated STATICALLY from rule logic - no benign corpus.
+Breadth is the other face of the Part-1 axis: matching the bare event is robust
+but broad; matching specifics is evadable but narrow.
+
+## Keep it independent of evadability (avoids circularity)
+Rate breadth on BENIGN OVERLAP - "how much legitimate admin/software activity
+would produce matching events?" - NOT on how specific the match is. These
+diverge: a rule matching `ImagePath|contains: '\Temp\'` is EVADABLE (relocate
+the binary) yet BROAD (installers use Temp constantly). Off-diagonal cases like
+this are where SQ3 is informative. Rate in a SEPARATE pass, ideally blind to the
+evadability label.
+
+## Scale (benign overlap)
+- BROAD - legitimate activity routinely matches: bare event (any 4720, any 7045,
+  any Run-key write) or common paths/binaries (`\Temp\`, `\AppData\`,
+  `powershell.exe`). High FP surface.
+- MODERATE - some benign cases but not routine: uncommon directory, a somewhat-
+  distinctive single pattern, behaviour some admin tools occasionally show.
+- NARROW - benign activity essentially never matches: specific malware
+  indicators, multiple distinctive ANDed conditions, known-bad names, or rules
+  with benign-excluding filters. Low FP surface.
+
+## Structural cues
+- Count of ANDed conditions (more -> narrower).
+- Modifier breadth (exact < startswith/endswith < contains < broad wildcard).
+- Distinctiveness of matched values (common -> broad; attacker-specific -> narrow).
+- Presence of filters/exclusions (-> narrower).
+
+## SQ3 analysis (exploratory)
+Cross-tabulate evadability (full/partial/none) x breadth (broad/moderate/narrow);
+hypothesis is inverse (robust<->broad, evadable<->narrow). Descriptive only;
+cells are tiny (rank correlation as a secondary check at most, caveated). This
+is a STRUCTURAL PROXY for false-positive proneness, NOT an enterprise
+false-positive rate - state that caveat explicitly.
