@@ -77,3 +77,70 @@ The five evasion types (Table 1), adapted to persistence fields in Part 2:
 - Recoding   - re-encode arguments: 127.0.0.1 -> 2130706433
 Uetz created >=3 matching and >=3 evading variants per evadable rule for
 variability; the empirical phase adopts this practice.
+
+
+
+
+# Part 2 - Evasion-type adaptation (SQ2 instrument)
+
+Uetz's five types were built for command-line STRINGS. Most of our rules match
+STRUCTURED values, so a type applies only if the field's structure admits it.
+These are PREDICTED applicabilities, confirmed against actual rule logic and
+telemetry during classification; a cell that turns out otherwise is a finding.
+
+## Field classes
+- PATH - hierarchical, order-fixed: registry key (`TargetObject`), service
+  registry path, startup-folder file path (`TargetFilename`), ImagePath location.
+- IDENTIFIER - atomic, attacker-chosen: service name (`ServiceName`), account
+  name (`TargetUserName`).
+- COMMAND-STRING - free-form, command-line-like: `ImagePath` with arguments,
+  registry value-data (`Details`) holding a command. Admits all five types.
+
+## What each type means per field class
+INSERTION (add ignored characters)
+- Command-string: insert quotes/spaces/carets - `C:\evil.exe` -> `C:\"evil".exe`. APPLIES.
+- Path / Identifier: structured values reject ignored insertions; a changed
+  identifier is just a different value (= substitution). N/A.
+
+SUBSTITUTION (synonymous token) - dominant
+- Path: equivalent autostart LOCATION (`\Run` <-> `\RunOnce` <-> Startup folder);
+  hive aliases (`HKLM` <-> `HKEY_LOCAL_MACHINE`) - but telemetry may normalise
+  these (verify empirically). APPLIES.
+- Identifier: any value works; use a non-matched one (`Updater`, `svc-help`).
+  APPLIES (strongest evasion for identifier-matching rules).
+- Command-string: synonymous tools/flags (`sc create` <-> `New-Service`;
+  `net user /add` <-> `New-LocalUser`). APPLIES.
+
+OMISSION (drop unnecessary characters)
+- Command-string: drop `.exe`, drop optional flags, shorten. APPLIES.
+- Path: drop trailing `.exe` in value-data commands only; key paths cannot
+  shorten. LIMITED.
+- Identifier: nothing unnecessary to drop. N/A.
+
+REORDERING (reorder tokens) - narrowest
+- Command-string: reorder command arguments (`binPath= X type= own` -> reorder). APPLIES.
+- Path / Identifier: hierarchical or atomic; nothing to reorder. N/A.
+
+RECODING (re-encode value) - co-dominant with substitution
+- Path: env-var (`%windir%` <-> `C:\Windows`, Uetz's own registry example),
+  8.3 short names (`PROGRA~1`), native object paths. APPLIES.
+- Command-string: env vars, encoded commands. APPLIES.
+- Identifier: case / Unicode homoglyph / trailing dot-space (Windows
+  normalises). LIMITED and brittle.
+
+## Per-technique instantiation
+- T1547.001 (registry): PATH (key) + sometimes COMMAND (value-data). Key rules
+  -> substitution + recoding. Value-data rules -> all five. Startup-folder file
+  rules -> substitution (location) + recoding (8.3) + naming.
+- T1543.003 (service): IDENTIFIER (ServiceName) + PATH/COMMAND (ImagePath) +
+  PATH (service registry). Widest surface - ImagePath is command-like.
+- T1136.001 (account): IDENTIFIER (account name) almost exclusively ->
+  substitution dominant, recoding limited. Narrowest surface.
+
+## Finding this predicts (SQ2)
+Persistence-event rules have a NARROWER evasion surface than command-line
+process-creation. Substitution and recoding transfer to structured fields and
+dominate; insertion, omission, and reordering are command-line-bound and do not
+apply to the path/identifier fields most persistence rules match. Account is
+narrowest (identifier-only); service widest (command-like ImagePath). The
+empirical results test this hypothesis.
