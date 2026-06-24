@@ -51,6 +51,17 @@ concrete attack without anticipating variations):
 This is also the false-positive axis in SQ3: robust rules tend to be broad
 (noisy); precise rules tend to be evadable.
 
+### Core test: intrinsic vs cosmetic specifics
+For each specific value a rule matches, ask: must it be present for the
+technique to work, or is it a removable artefact the attacker happened to use?
+- INTRINSIC (technique cannot work without it) -> robust -> NONE.
+  e.g. `$` suffix on a hidden account; the bare autostart/7045/4720 event;
+  the SAM `\Names\` path for a hidden user.
+- COSMETIC (attacker's removable choice) -> evadable -> FULL.
+  e.g. a specific service/account name, an enumerated key list, a tool-specific
+  ImagePath pattern, a masquerade name like "ANONYMOUS LOGON", the creating
+  process (msdt.exe) when the action can be done by another process.
+
 ## Worked examples (from this corpus)
 - Registry rule matching `TargetObject|endswith: '\CurrentVersion\Run'` only:
   writing to `\CurrentVersion\RunOnce` (also autostarts) is functionally
