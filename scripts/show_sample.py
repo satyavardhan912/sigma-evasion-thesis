@@ -1,32 +1,31 @@
 """
 show_sample.py
-Print a representative spread for calibrating the classification: a registry
-Run-key rule, a startup-folder file rule, a service-install rule, and all
-account-creation rules.
+Print rules from the classification sheet for a chosen technique + event class,
+in batches, for classification. Usage examples:
+    python scripts\\show_sample.py registry
+    python scripts\\show_sample.py registry 0 10
+    python scripts\\show_sample.py service_install
+    python scripts\\show_sample.py security_log
 """
+import sys
 from pathlib import Path
 import pandas as pd
 
 DATA = Path(__file__).resolve().parent.parent / "data"
 df = pd.read_csv(DATA / "classification_sheet.csv").fillna("")
 
+event_class = sys.argv[1] if len(sys.argv) > 1 else "registry"
+start = int(sys.argv[2]) if len(sys.argv) > 2 else 0
+count = int(sys.argv[3]) if len(sys.argv) > 3 else 10
 
-def pick(technique, event_class):
-    sub = df[(df["technique"] == technique) & (df["event_class"] == event_class)]
-    return sub.iloc[[0]] if len(sub) else df.iloc[0:0]
+sub = df[df["event_class"] == event_class].reset_index(drop=True)
+batch = sub.iloc[start:start + count]
 
-
-picks = [
-    pick("T1547.001", "registry"),
-    pick("T1547.001", "file_event"),
-    pick("T1543.003", "service_install"),
-    df[df["technique"] == "T1136.001"],   # all account rules
-]
-sample = pd.concat(picks).drop_duplicates(subset="title")
-
-for _, r in sample.iterrows():
+print(f"=== {event_class}: showing {start}-{start + len(batch) - 1} "
+      f"of {len(sub)} ===\n")
+for i, r in batch.iterrows():
     print("=" * 72)
-    print(f"[{r['technique']} | {r['event_class']}] {r['title']}")
+    print(f"#{i}  [{r['technique']} | {r['event_class']}] {r['title']}")
     print(f"  DESC : {r['description']}")
     print(f"  LOGIC: {r['detection_summary']}")
     print(f"  FALSEPOS: {r['falsepositives']}")
