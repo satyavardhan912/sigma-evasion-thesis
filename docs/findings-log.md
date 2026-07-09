@@ -20,6 +20,7 @@ Finding: SigmaHQ technique tagging is noisy for persistence - relevant to any
   - #3, #4 New PDQDeploy Service (Client/Server) - detect a legitimate deployment
   tool's own service install, not an attack technique; tagged T1543.003. This is
   "detect a specific admin tool," not "detect persistence."
+
 - #6 ProcessHacker Privilege Elevation - really PRIVILEGE ESCALATION / tool
   detection (service used to elevate to LocalSystem), tagged T1543.003.
 - #5 (sec) OilRig "Schedule Task Persistence" - detects EID 4698 (SCHEDULED TASK
@@ -27,7 +28,12 @@ Finding: SigmaHQ technique tagging is noisy for persistence - relevant to any
   scheduled tasks (T1053) were deliberately excluded from this thesis. Slipped
   into corpus via the T1543.003 tag. Corpus-hygiene finding; report as a limit
   of tag-based rule selection. (Service analog of #28 Event Log mis-tag.)
-  [ADD MORE AS FOUND]
+
+  - #1 (file) PSEXEC Remote Execution File Artefact - detects a PsExec .key
+  artifact = LATERAL MOVEMENT tool artifact, tagged T1543.003. Mis-scoped.
+- #0 (file) Moriya Rootkit File Created - a driver .sys IOC file drop; borderline
+  with the excluded driver-load surface, kept because tagged T1543.003 + file event.
+
 
 ## B. Enumerated-list rules are structurally evadable
 The dominant registry pattern: match a fixed LIST of autostart locations. Always
@@ -36,6 +42,11 @@ an off-list location within the same technique evades. The rule's own filter
 list is evidence of its false-positive surface.
 Finding (SQ1/SQ2): registry persistence rules are predominantly evadable, and
 evadable for a single structural reason (location enumeration), not diverse ones.
+
+- #6 (file) Suspicious Startup Folder Persistence enumerates executable
+  extensions (.bat/.dll/.exe...) but OMITS .lnk - the most common Startup payload.
+  A .lnk drop evades it -> FULL. Lesson: an extension allow-list is still an
+  enumerated list; "matches executable files" != invariant if it misses a vector.
 
 ## C. Evadable AND noisy - the SQ3 off-diagonal
 Rules that are FULL (evadable) yet BROAD (high false-positive surface):
@@ -54,6 +65,10 @@ NONE is earned only when the rule matches the invariant of its specific method:
 SAM \Names\ + `$` (#0), ServiceDll write (#3), Startup-folder redirect value
 (#14), the specific hijack command key (#15/#28 arguable). Pattern: robustness
 comes from pinning the one action the technique cannot avoid.
+
+- #5 (file) Startup Folder File Write - matches ANY write to the Startup folder
+  (no process/extension pin) = the invariant of Startup-folder persistence -> NONE
+  (broad). The file-event analog of bare-4720 (#1 sec). Third bare-event NONE rule.
 
 ## E. Scoping judgment: classify against the tagged technique
 Where a rule is robust under a super-narrow method definition (LSP injection,
