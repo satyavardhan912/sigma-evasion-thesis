@@ -103,3 +103,22 @@ almost entirely evadable - a stronger evadability result than registry.
   against SUBSTITUTION (hyphen/slash swap, Uetz type 2). Evidence that some
   evasions are known to rule authors; relevant to SQ2 (not all five types are
   equally "open"). Watch for more modifier-based hardening (windash, etc.).
+
+  ## I. Corpus-level results (FINAL, in-scope N=65)
+- SQ1: 85% evadable (55 full, 0 partial, 10 none, 0 broken). ~2x Uetz's 44%
+  for process-creation -> persistence-event rules are markedly weaker.
+- Zero partials: event-based detection is structurally binary (pin a cosmetic
+  detail = full; match the invariant event = none). No OR-branch middle ground.
+- SQ2: substitution is the ONLY evasion type (55/55). Confirms Part 2 prediction
+  - structured fields (identifiers/paths) admit only substitution/recoding, not
+  the command-line-bound types. Evasion surface collapses to "use another value".
+- SQ3: full rules span all breadths (16 broad / 13 mod / 26 narrow); none rules
+  span all breadths too (5 narrow-invariant, 2 broad bare-event). Evasion
+  resistance and FP surface are INDEPENDENT (off-diagonal populated both ways).
+- Per technique: registry 88% evadable, service 89%, account 25% - but account's
+  "robustness" is coverage-poverty (only 4 rules; 3 are blunt bare-event matches),
+  not strong detection. Service = 17 evadable IOC rules, ~no invariant coverage.
+- The 10 NONE rules earn robustness one of two ways: (a) match a true invariant
+  (SAM $, ServiceDll, Startup-redirect - narrow), or (b) match the bare event
+  (4720, Startup-write - broad). Robustness always = "match what the technique
+  cannot avoid."
