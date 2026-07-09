@@ -22,6 +22,11 @@ Finding: SigmaHQ technique tagging is noisy for persistence - relevant to any
   "detect a specific admin tool," not "detect persistence."
 - #6 ProcessHacker Privilege Elevation - really PRIVILEGE ESCALATION / tool
   detection (service used to elevate to LocalSystem), tagged T1543.003.
+- #5 (sec) OilRig "Schedule Task Persistence" - detects EID 4698 (SCHEDULED TASK
+  creation), tagged T1543.003 (service). Both mis-tagged AND out-of-scope:
+  scheduled tasks (T1053) were deliberately excluded from this thesis. Slipped
+  into corpus via the T1543.003 tag. Corpus-hygiene finding; report as a limit
+  of tag-based rule selection. (Service analog of #28 Event Log mis-tag.)
   [ADD MORE AS FOUND]
 
 ## B. Enumerated-list rules are structurally evadable
@@ -72,6 +77,10 @@ behavioural install-property, not from covering the technique invariant. Sharp
 contrast with account creation, which HAS a bare-4720 rule (#6, NONE/broad).
 Implication: service-install detection is almost entirely IOC-based and thus
 almost entirely evadable - a stronger evadability result than registry.
+
+- CONFIRMED across security-log service rules too: #7 (sec, PID-0) is the 4697
+  twin NONE; all name/IOC-based 4697 rules are FULL. The 7045/4697 pairs behave
+  identically, reinforcing the finding.
 
 ## H. Rules already defending against Uetz-style evasions
 - #14 Suspicious Service Installation Script uses the `windash` modifier, which
