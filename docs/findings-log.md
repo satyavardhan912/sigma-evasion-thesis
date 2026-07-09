@@ -59,13 +59,23 @@ tag (#27, #28). Methodological point to state explicitly in the write-up.
 32 registry rules: mostly FULL (enumerated lists + IOC-tailored), NONE reserved
 for true-invariant rules. [INSERT FINAL COUNTS from classification_sheet.csv]
 
-## G. Service-install rules: no rule matches the technique invariant
-The invariant of T1543.003 is "a service is installed" = the bare EID 7045
-event. Across service-install rules classified so far (batch 1, #0-9), EVERY
-rule keys on a COSMETIC specific - an attacker-chosen ServiceName (#1,#2,#5,#6),
-a tool-specific name/list (#3,#4,#7), or a suspicious ImagePath (#0,#8,#9). NONE
-match the bare 7045 event. Consequence: all are FULL by substitution.
-Emerging SQ1 finding: SigmaHQ service-install detection appears to be entirely
-IOC/name-based, therefore entirely evadable - there is no "detect any service
-install" robust rule in the corpus (unlike account creation, where the bare
-4720 rule #6 exists and is NONE). CONFIRM once all 18 service rules are done.
+## G. Service-install rules: robustness only via install-method, never bare event
+18 service-install rules. 17 are FULL by substitution - every one keys on a
+COSMETIC specific: attacker-chosen ServiceName (Sliver, WerFaultSvc, KrbSCM...),
+tool name-lists (RAT list, PDQ), or suspicious ImagePath content/paths. Exactly
+ONE is NONE: #10 (Service Installed By Unusual Client), robust because it matches
+an install-METHOD invariant (ProcessId 0 = remote/SCM-injected install), not a
+name or path.
+KEY FINDING (SQ1/SQ2): NO service-install rule detects the bare "a service was
+installed" event (EID 7045 alone). Robustness, where it exists, comes from a
+behavioural install-property, not from covering the technique invariant. Sharp
+contrast with account creation, which HAS a bare-4720 rule (#6, NONE/broad).
+Implication: service-install detection is almost entirely IOC-based and thus
+almost entirely evadable - a stronger evadability result than registry.
+
+## H. Rules already defending against Uetz-style evasions
+- #14 Suspicious Service Installation Script uses the `windash` modifier, which
+  matches both `-` and `/` flag prefixes - i.e. the author explicitly defends
+  against SUBSTITUTION (hyphen/slash swap, Uetz type 2). Evidence that some
+  evasions are known to rule authors; relevant to SQ2 (not all five types are
+  equally "open"). Watch for more modifier-based hardening (windash, etc.).
