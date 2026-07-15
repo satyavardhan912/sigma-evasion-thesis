@@ -4,6 +4,9 @@
 # Third-party SigmaHQ rules (reproduced via recorded commit hash, not vendored)
 sigma-repo/
 
+# Third-party Hayabusa ruleset (reproduced via recorded pin, not vendored)
+hayabusa-rules/
+
 # Python cache
 __pycache__/
 *.pyc
