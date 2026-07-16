@@ -7,6 +7,12 @@ sigma-repo/
 # Third-party Hayabusa ruleset (reproduced via recorded pin, not vendored)
 hayabusa-rules/
 
+# Rule test stories - kept local, not committed
+docs/rule-stories/
+
+# Rule test evidence (logs, CSVs, screenshots) - kept local, not committed
+evidence/
+
 # Python cache
 __pycache__/
 *.pyc
