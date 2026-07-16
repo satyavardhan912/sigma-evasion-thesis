@@ -122,3 +122,17 @@ almost entirely evadable - a stronger evadability result than registry.
   (SAM $, ServiceDll, Startup-redirect - narrow), or (b) match the bare event
   (4720, Startup-write - broad). Robustness always = "match what the technique
   cannot avoid."
+
+  ## Isolation of same-key stateful tests (methods)
+IOC-rename evasions write to the SAME registry key as the baseline. reg add does
+not remove the prior value, and the baseline's write event lingers in the capture
+window -> false "detected" on the evasion (observed R03). Procedure: delete the
+baseline artifact before the evasion capture and/or use a tight (1-min) window.
+Different-key evasions (e.g. R02 native-vs-Wow6432Node) are immune.
+
+## Rule overlap (running tally - answers "why not combine rules?")
+- R02: evaded Wow6432Node rule via native path; Direct Autorun caught native write.
+- R03: evaded Leviathan IOC rule via rename; Direct Autorun / CurrentVersion /
+  New RUN Key all still fired on the same write.
+Pattern: IOC/specific rules evade easily, but generic behavioural Run-key rules
+provide residual technique coverage. Evading one rule != evading the technique.
