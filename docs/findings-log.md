@@ -130,6 +130,8 @@ window -> false "detected" on the evasion (observed R03). Procedure: delete the
 baseline artifact before the evasion capture and/or use a tight (1-min) window.
 Different-key evasions (e.g. R02 native-vs-Wow6432Node) are immune.
 
+
+
 ## Rule overlap (running tally - answers "why not combine rules?")
 - R02: evaded Wow6432Node rule via native path; Direct Autorun caught native write.
 - R03: evaded Leviathan IOC rule via rename; Direct Autorun / CurrentVersion /
