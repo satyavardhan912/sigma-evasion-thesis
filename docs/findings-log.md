@@ -203,3 +203,15 @@ the capture window they both appear in the log and can fire different rules
 (observed R15: native baseline write lingered in the Wow6432Node evasion
 capture, firing the native rule). Rule: always age out / tighten window between
 phases in the same log, regardless of key. Time is the axis, not key identity.
+
+
+## Command-content evasion is consistent across event classes (SQ2)
+Rules that match an attacker's loader command (PowerShell/encoded/download
+markers, or CS command patterns) are evaded by pointing the service/value at a
+plain binary - confirmed identically across THREE event classes:
+- R08 CobaltStrike Service - System (7045, ImagePath)
+- R12 CobaltStrike Service - Security (4697, ServiceFileName)
+- R17 PowerShell In Run Keys (Sysmon 13, registry Details)
+The command markers are never a persistence requirement, so omitting them costs
+the attacker nothing. Event class does not affect evadability of command-content
+rules.
