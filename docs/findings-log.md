@@ -149,3 +149,20 @@ provide residual technique coverage. Evading one rule != evading the technique.
   reasoning; excluded from empirical SQ4). Finding: robust rules that key on
   structural install-method properties are hard to reproduce, hence under-tested
   - the robustness comes precisely from matching a non-cosmetic condition.
+
+
+  ## Rule-title mismatches (SigmaHQ vs Hayabusa) - methods caution
+Hayabusa sometimes renames rules from their SigmaHQ titles. Test-TargetRule
+matches on title, so a mismatch causes a FALSE "did NOT fire". Critical for
+none rules (a false non-detection reads as evasion) and baselines. Confirmed:
+- "Hidden Local User Creation" (SigmaHQ) = "Hidden User Account Created" (Hayabusa).
+Procedure: on any "did NOT fire", cross-check the actual detections list before
+recording. Recommend pre-mapping all 31 subset titles to Hayabusa titles.
+
+## Rule-quality findings (for discussion chapter)
+- R10 "Hidden Local User Creation": the filter_main_homegroup exclusion
+  (intended to whitelist the benign HomeGroupUser$ account) is INEFFECTIVE in
+  Hayabusa 3.10.0 - an account named exactly HomeGroupUser$ still fires the rule.
+  Event confirmed the name matched the filter string. Likely a TargetUserName
+  field-resolution mismatch. Result: rule is more robust in practice than its
+  logic suggests, but the benign-exclusion the author intended does not function.
