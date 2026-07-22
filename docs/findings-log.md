@@ -215,3 +215,12 @@ plain binary - confirmed identically across THREE event classes:
 The command markers are never a persistence requirement, so omitting them costs
 the attacker nothing. Event class does not affect evadability of command-content
 rules.
+
+- R18: "New RUN Key Pointing to Suspicious Folder" was the frequent sibling
+  firing on R02/R03/R16/R17 - but ONLY because those payloads used \Users\Public\
+  (a flagged path). Tested directly with a clean path (System32), it drops out.
+  Implication: some "technique-level coverage" credited to path-based siblings
+  is an artifact of test-payload placement and vanishes for an attacker using a
+  non-flagged location. Path-based sibling coverage is more fragile than
+  name/behavioural sibling coverage (which fires regardless of path). This
+  qualifies the earlier "rule-overlap provides residual coverage" finding.
