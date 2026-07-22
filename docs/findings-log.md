@@ -166,3 +166,14 @@ recording. Recommend pre-mapping all 31 subset titles to Hayabusa titles.
   Event confirmed the name matched the filter string. Likely a TargetUserName
   field-resolution mismatch. Result: rule is more robust in practice than its
   logic suggests, but the benign-exclusion the author intended does not function.
+
+
+  ## Hayabusa renames rules at RUNTIME (critical methods caution)
+Hayabusa's YAML title can match SigmaHQ exactly, yet its scan-time CSV output
+displays a DIFFERENT rule title. Confirmed: YAML "Hidden Local User Creation" ->
+CSV output "Hidden User Account Created". Therefore title cannot be pre-mapped
+from files; Test-TargetRule (which reads the CSV title) can give a FALSE "did
+NOT fire" when the rule fired under a renamed title. MANDATORY procedure: after
+every Test-TargetRule, run Show-Detections and confirm the target's presence/
+absence in the full detection list. Essential for none rules (a missed rename
+records robust-as-evaded).
