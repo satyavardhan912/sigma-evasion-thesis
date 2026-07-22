@@ -224,3 +224,19 @@ rules.
   non-flagged location. Path-based sibling coverage is more fragile than
   name/behavioural sibling coverage (which fires regardless of path). This
   qualifies the earlier "rule-overlap provides residual coverage" finding.
+
+
+
+  ## Over-specific contains|all rules (SQ2)
+- R19 KamiKakaBot Winlogon Shell: rule requires ALL of 4 PowerShell-loader
+  markers in the Shell value. Omitting any one (plain payload) evades while
+  keeping identical persistence. contains|all rules tuned to one malware's exact
+  loader are brittle - the more specific the required combination, the easier to
+  fall outside it. Stricter variant of the command-content pattern (R08/R12/R17).
+
+## Shell variable-expansion during test setup (methods caution)
+PowerShell expands $env:VAR inside reg add args BEFORE reg.exe sees them, which
+can strip a literal marker the rule needs (observed R19: $env expanded away,
+baseline failed to fire despite intent). Fix: single-quote the /d value so
+PowerShell passes it literally. Always verify written value with reg query
+before capturing when the rule matches literal shell-syntax strings.
