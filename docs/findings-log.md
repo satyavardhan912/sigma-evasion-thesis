@@ -138,3 +138,14 @@ Different-key evasions (e.g. R02 native-vs-Wow6432Node) are immune.
   New RUN Key all still fired on the same write.
 Pattern: IOC/specific rules evade easily, but generic behavioural Run-key rules
 provide residual technique coverage. Evading one rule != evading the technique.
+
+
+## Rules with structural conditions un-reproducible in single-VM lab
+- R09 "Service Installed By Unusual Client - System" (EID 7045, ProcessId=0) and
+  its Security twin (EID 4697, ProcessId/ClientProcessId=0) key on a STRUCTURAL
+  install property (remote/system-context service creation). A local interactive
+  sc.exe create produces a real PID (verified), so the true positive cannot be
+  staged in a single-VM lab. Recorded as static-only (prediction 'none' holds by
+  reasoning; excluded from empirical SQ4). Finding: robust rules that key on
+  structural install-method properties are hard to reproduce, hence under-tested
+  - the robustness comes precisely from matching a non-cosmetic condition.
