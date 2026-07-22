@@ -168,12 +168,23 @@ recording. Recommend pre-mapping all 31 subset titles to Hayabusa titles.
   logic suggests, but the benign-exclusion the author intended does not function.
 
 
-  ## Hayabusa renames rules at RUNTIME (critical methods caution)
-Hayabusa's YAML title can match SigmaHQ exactly, yet its scan-time CSV output
-displays a DIFFERENT rule title. Confirmed: YAML "Hidden Local User Creation" ->
-CSV output "Hidden User Account Created". Therefore title cannot be pre-mapped
-from files; Test-TargetRule (which reads the CSV title) can give a FALSE "did
-NOT fire" when the rule fired under a renamed title. MANDATORY procedure: after
-every Test-TargetRule, run Show-Detections and confirm the target's presence/
-absence in the full detection list. Essential for none rules (a missed rename
-records robust-as-evaded).
+  ## Hayabusa reassigns BOTH title and ID at runtime (critical methods finding)
+Hayabusa's scan-time CSV output uses a different RuleTitle AND RuleID than the
+rule's YAML file - neither is predictable from the files (confirmed: YAML title
+"Hidden Local User Creation"/id 23013005... -> CSV "Hidden User Account
+Created"/RuleID 70b8b1bd...). So target detection cannot be verified by
+pre-mapping titles or IDs. MANDATORY procedure: verify each result against the
+actual CSV detection list, matching the target by its detection logic/keywords.
+For NONE rules especially: run Show-Detections on both phases and confirm the
+target's presence, since a missed rename would falsely record robust-as-evaded.
+Renaming is deterministic per Hayabusa version, so a rule's runtime title, once
+observed, is reliable for that rule.
+
+
+- R13: relocating the service binary out of \AppData\ evaded BOTH path-based
+  rules ("Service Installation in Suspicious Folder" AND "Suspicious Service
+  Path") simultaneously. Unlike name-IOC evasions (where a generic behavioural
+  sibling still fires), path-based rules share the same weakness - moving the
+  binary defeats all of them at once, leaving NO residual path-rule coverage.
+  Only the generic "Svc Installed" (any service install) remained. Implication:
+  path-based detection is more brittle as a family than behavioural detection.
