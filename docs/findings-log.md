@@ -188,3 +188,18 @@ observed, is reliable for that rule.
   binary defeats all of them at once, leaving NO residual path-rule coverage.
   Only the generic "Svc Installed" (any service install) remained. Implication:
   path-based detection is more brittle as a family than behavioural detection.
+
+
+
+  ## Substring title collisions in Test-TargetRule (methods caution)
+"CurrentVersion Autorun Keys Modification" is a substring of "Wow6432Node
+CurrentVersion Autorun Keys Modification", so Test-TargetRule's -like match hits
+both. For these paired native/Wow6432Node rules, verify with exact-match (-eq)
+against the CSV RuleTitle, not the -like helper. Confirmed R15.
+
+## Capture-window contamination is TIME-based, not key-based (correction)
+Even when baseline and evasion write to DIFFERENT registry keys, if run within
+the capture window they both appear in the log and can fire different rules
+(observed R15: native baseline write lingered in the Wow6432Node evasion
+capture, firing the native rule). Rule: always age out / tighten window between
+phases in the same log, regardless of key. Time is the axis, not key identity.
