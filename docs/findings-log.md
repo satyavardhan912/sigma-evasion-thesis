@@ -253,3 +253,20 @@ deployed Sysmon config does not monitor, making that key effectively invisible
 to detection regardless of rule logic. This is a telemetry-vs-rule-coverage
 dependency worth noting in the discussion. For testing: baseline must use a key
 the Sysmon config actually monitors (Shell, not Taskman).
+
+
+
+## Rule blind spot: \Software\Classes vs HKCR serialisation (R22, significant)
+"Classes Autorun Keys Modification" requires TargetObject|contains:
+\Software\Classes. But Sysmon serialises Classes-hive writes using the HKCR
+abbreviation (HKLM\Software\Classes -> "HKCR\...", HKCU\Software\Classes ->
+"HKU\<SID>_Classes\..."). Neither contains the literal "\Software\Classes", so
+the rule CANNOT MATCH real Classes writes despite Sysmon logging them (EID 13
+produced). The rule fails on its own target technique. This is a rule-quality
+defect (path pattern doesn't match telemetry serialisation), distinct from the
+Taskman telemetry gap (R20, no event at all). Implication for SQ1/SQ2: a rule
+can be "present" in the corpus yet non-functional against the technique it
+targets - COM/shell-class hijacks evade it trivially because of the path-format
+mismatch. Recorded static-only (prediction full stands by reasoning; excluded
+from empirical SQ4). This strengthens the coverage-as-metric critique: rule
+count overstates real detection capability.
