@@ -240,3 +240,16 @@ can strip a literal marker the rule needs (observed R19: $env expanded away,
 baseline failed to fire despite intent). Fix: single-quote the /d value so
 PowerShell passes it literally. Always verify written value with reg query
 before capturing when the rule matches literal shell-syntax strings.
+
+
+## Sysmon registry monitoring is selective (telemetry-coverage finding)
+SwiftOnSecurity Sysmon config monitors SPECIFIC registry values, not entire
+subtrees. Confirmed: a write to \Winlogon\Shell produces EID 13 (R19), but a
+write to \Winlogon\Taskman produces NO Sysmon event (R20 diagnosis) - despite
+both being autostart-relevant and both listed in the "CurrentVersion NT Autorun"
+rule. IMPLICATION: a Sigma rule's efficacy depends on whether the telemetry
+source emits events for the paths it targets. A rule can list a key that the
+deployed Sysmon config does not monitor, making that key effectively invisible
+to detection regardless of rule logic. This is a telemetry-vs-rule-coverage
+dependency worth noting in the discussion. For testing: baseline must use a key
+the Sysmon config actually monitors (Shell, not Taskman).
