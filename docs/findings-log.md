@@ -270,3 +270,12 @@ targets - COM/shell-class hijacks evade it trivially because of the path-format
 mismatch. Recorded static-only (prediction full stands by reasoning; excluded
 from empirical SQ4). This strengthens the coverage-as-metric critique: rule
 count overstates real detection capability.
+
+## Extension-list rules omit common formats (SQ2)
+- R23 "Suspicious Startup Folder Persistence" lists suspicious SCRIPT extensions
+  (.bat/.ps1/.vbs/.hta/etc.) but omits .exe and .lnk - the two most common
+  startup-folder persistence formats. Evaded by dropping an .exe (more standard,
+  not more obscure). The rule encodes an assumption (startup persistence =
+  scripts) that doesn't hold. Extension-agnostic rules (Startup Folder File
+  Write) provide the real coverage. Enumerated lists that miss the common case
+  are trivially evaded by the common case.
