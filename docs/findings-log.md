@@ -301,3 +301,17 @@ SIGNIFICANCE:
   potential bypass.
 - The rule IS robust vs extension/process tricks (evasion1 with .exe still
   fired) - so it's not weak everywhere, only through the specific filter hole.
+
+  ## Filter specificity determines exploitability (R25 vs R26, SQ2/SQ3)
+Two rules whitelist a benign process via an Image filter; opposite evadability:
+- R25 "Startup Folder File Write": filter Image|endswith \ONENOTE.EXE -> FORGEABLE
+  (renamed dropper at C:\Users\Public\ONENOTE.EXE matched, rule suppressed = evasion).
+- R26 "ServiceDll Hijack": filter Image: C:\Windows\System32\poqexec.exe (EXACT
+  path) -> NOT forgeable (renamed dropper in Public didn't match; also the reg
+  write was attributed to reg.exe not the launcher). Rule still fired.
+LESSON: an endswith Image filter is a forgeable evasion channel; an exact-path
+Image filter resists the rename trick. Same whitelist intent, opposite security,
+purely due to match specificity. Rule authors should prefer exact-path (or add
+signature/hash conditions) for benign-process exclusions. Also: registry writes
+are attributed to reg.exe, so Image-based filters on reg writes rarely match the
+"real" actor anyway.
