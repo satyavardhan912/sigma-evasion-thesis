@@ -315,3 +315,26 @@ purely due to match specificity. Rule authors should prefer exact-path (or add
 signature/hash conditions) for benign-process exclusions. Also: registry writes
 are attributed to reg.exe, so Image-based filters on reg writes rarely match the
 "real" actor anyway.
+
+## Filter-bypass taxonomy - THREE mechanisms (R25/R26/R27) [HEADLINE FINDING]
+SigmaHQ filters (meant to reduce false positives) create evasion surface. Three
+rules, three filter forms, characterized by exploitability:
+- R25 "Startup Folder File Write": Image|endswith \ONENOTE.EXE -> FORGEABLE.
+  Renamed dropper anywhere (C:\Users\Public\ONENOTE.EXE) satisfies endswith.
+  BYPASS CONFIRMED (predicted none -> empirical full).
+- R26 "ServiceDll Hijack": Image: C:\Windows\System32\poqexec.exe (exact-path)
+  -> RESISTANT. Renamed dropper in Public doesn't match; reg write attributed to
+  reg.exe anyway. Bypass FAILED (predicted none -> empirical none). Negative control.
+- R27 "Modify User Shell Folders Startup": Details|contains|all [C:\Users\,
+  \AppData\Roaming\...\Startup] -> BYPASSABLE via world-writable path. Redirect to
+  C:\Users\Public\AppData\Roaming\...\Startup matches the whitelist substring but
+  is writable by any user, no admin. BYPASS CONFIRMED (predicted none -> empirical full).
+GENERAL LESSON: endswith and contains filters are commonly bypassable; exact-path
+filters resist. Whitelists intended for benign activity are attacker-satisfiable
+when the match is loose (endswith/contains) or the whitelisted resource is
+world-accessible (Public profile). Static analysis treating filters as pure
+noise-reduction misclassifies these rules as robust -> BOTH static/empirical
+mismatches (R25, R27) are filter-bypass cases. This directly links SQ3 (FP breadth)
+to SQ1 (evadability): the broader/looser the FP exclusion, the larger the evasion
+surface. THREE rule-quality findings total (R10 broken filter, R22 blind-spot,
+R25/R27 forgeable filters).
