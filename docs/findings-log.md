@@ -279,3 +279,25 @@ count overstates real detection capability.
   scripts) that doesn't hold. Extension-agnostic rules (Startup Folder File
   Write) provide the real coverage. Enumerated lists that miss the common case
   are trivially evaded by the common case.
+
+
+  ## FINDING: FP carve-out as evasion channel (R25, first static/empirical mismatch)
+"Startup Folder File Write" matches any file in Startup MINUS filters. The
+filter_optional_onenote exclusion (Image endswith \ONENOTE.EXE AND TargetFilename
+endswith "\Send to OneNote.lnk") is a FORGEABLE evasion channel: both conditions
+are attacker-controllable at zero persistence cost (a .lnk runs its target
+regardless of name; the filter matches on-disk Image, satisfiable by a renamed
+dropper; no admin). CONFIRMED empirically: file written to Startup via renamed
+ONENOTE.EXE named "Send to OneNote.lnk" - rule did NOT fire. Filter works exactly
+as written (unlike R10's ineffective filter) - which is why it's exploitable.
+SIGNIFICANCE:
+- First static/empirical MISMATCH (predicted none, empirical full). Strengthens
+  SQ4 independence claim - static reading missed the filter vector; empirical
+  testing caught it. Perfect agreement would suggest the measures aren't
+  independent; this disagreement shows they are.
+- Third rule-quality finding (with R10 broken-filter, R22 blind-spot) and the
+  most general: an over-specific FP exclusion IS an evasion channel. Direct
+  SQ3(FP breadth) -> SQ1(evadability) link. Every whitelist exception is a
+  potential bypass.
+- The rule IS robust vs extension/process tricks (evasion1 with .exe still
+  fired) - so it's not weak everywhere, only through the specific filter hole.
