@@ -364,3 +364,24 @@ a standard Sysmon config leaves unmonitored. RECURRING PATTERN: rule ambition
 exceeds default telemetry coverage - a rule can be present and well-designed yet
 non-functional because the deployed sensor doesn't watch the path it targets. Feeds
 the coverage-as-metric critique alongside R22 (rule count overstates real capability).
+
+
+## Telemetry gap by DELIBERATE EXCLUSION - rule vs config in opposition (R29 Narrator) [SHARP]
+"Narrator's Feedback-Hub Persistence" fires on writes to an AppX package's
+\Shell\open\command key. But SwiftOnSecurity's Sysmon config (the de-facto
+standard) has an EXCLUDE rule: <TargetObject condition="contains">_Classes\AppX
+</TargetObject> commented "Remove noise monitoring Shell\open\command". It
+deliberately drops exactly the writes this rule needs. CONFIRMED: wrote the key's
+(Default) value (reg query verified), zero Sysmon EID 13 produced. So the rule is
+non-functional on this config.
+SIGNIFICANCE (coverage-as-metric, sharpest instance):
+- The detection rule and the telemetry config DISAGREE about whether this path is
+  worth watching. SigmaHQ says "detect it"; SwiftOnSecurity says "it's noise, drop it."
+- A defender running SigmaHQ on SwiftOnSecurity has this rule ENABLED but BLINDED
+  by their own sensor config, with no indication.
+- Stronger than R20/SAM (config omits path): here the config ACTIVELY EXCLUDES it.
+TELEMETRY-GAP TALLY (rules non-functional due to Sysmon coverage): R20 Taskman
+(single value omitted), R28-SAM (hive omitted), R29-Narrator (path actively
+excluded). Plus R22 (path-format mismatch). Recurring theme: rule coverage on
+paper overstates real detection capability; the deployed sensor determines what
+fires, and common configs leave multiple corpus rules blind.
