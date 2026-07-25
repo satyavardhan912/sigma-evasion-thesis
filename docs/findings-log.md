@@ -338,3 +338,16 @@ mismatches (R25, R27) are filter-bypass cases. This directly links SQ3 (FP bread
 to SQ1 (evadability): the broader/looser the FP exclusion, the larger the evasion
 surface. THREE rule-quality findings total (R10 broken filter, R22 blind-spot,
 R25/R27 forgeable filters).
+
+
+## Subset scope correction: removed "Windows Event Log Access Tampering Via Registry" (31 -> 30)
+During empirical testing (R28), this rule was found to target T1562.002 (Disable
+Windows Event Logging) - a DEFENCE-EVASION technique, not one of the study's three
+persistence techniques (T1547.001, T1543.003, T1136.001). It had been flagged at
+selection as "mis-tagged defence-evasion; optional." Removed from the test subset
+to maintain scope integrity (a persistence-evasion study should not include a
+defence-evasion rule). Test subset: 31 -> 30 rules. This is a scope correction
+identified by validating subset rules against their actual ATT&CK technique during
+testing. (Note: on inspection the rule also appeared evadable - its content
+condition D:(D; matches only Deny-ACE SDDLs, missing non-Deny log-blinding - but
+it was removed for scope, not tested.)
