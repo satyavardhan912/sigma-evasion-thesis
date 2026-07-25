@@ -351,3 +351,16 @@ identified by validating subset rules against their actual ATT&CK technique duri
 testing. (Note: on inspection the rule also appeared evadable - its content
 condition D:(D; matches only Deny-ACE SDDLs, missing non-Deny log-blinding - but
 it was removed for scope, not tested.)
+
+
+## Telemetry gap: SAM hive not monitored (R28, reinforces R20)
+"Creation of a Local Hidden User Account by Registry" requires an EID 13 SAM-write
+(Image=lsass, SAM\Names\<name>$). SwiftOnSecurity's Sysmon config does NOT monitor
+the SAM hive (no TargetObject rule for \SAM\SAM\Domains\Account; confirmed no SAM
+EID 13 produced when a $-account was created, though 4720 fired confirming the
+write happened). So the rule cannot fire in this common config. Second telemetry-
+coverage instance (with R20 Taskman): multiple corpus rules target registry paths
+a standard Sysmon config leaves unmonitored. RECURRING PATTERN: rule ambition
+exceeds default telemetry coverage - a rule can be present and well-designed yet
+non-functional because the deployed sensor doesn't watch the path it targets. Feeds
+the coverage-as-metric critique alongside R22 (rule count overstates real capability).
