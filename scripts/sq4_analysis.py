@@ -87,6 +87,19 @@ def interpret_kappa(k):
 print(f"Interpretation (Landis & Koch): {interpret_kappa(kappa)}")
 print()
 
+# --- Matthews Correlation Coefficient (pre-empts Chicco & Jurman objection; aligns with Uetz) ---
+import math
+mcc_num = (tp * tn) - (fp * fn)
+mcc_den = math.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
+if mcc_den == 0:
+    mcc = float('nan')
+    print("MCC: undefined (a margin is zero)")
+else:
+    mcc = mcc_num / mcc_den
+    print(f"Matthews Correlation Coefficient (MCC): {mcc:.4f}")
+    print("  (reported alongside kappa; MCC is the metric used by Uetz et al.)")
+
+
 # --- The disagreements, named ---
 print("DISAGREEMENTS (predicted != empirical):")
 disagree = testable[testable['predicted_evadability'] != testable['empirical_outcome']]
