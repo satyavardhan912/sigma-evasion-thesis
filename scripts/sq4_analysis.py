@@ -97,7 +97,7 @@ if mcc_den == 0:
 else:
     mcc = mcc_num / mcc_den
     print(f"Matthews Correlation Coefficient (MCC): {mcc:.4f}")
-    print("  (reported alongside kappa; MCC is the metric used by Uetz et al.)")
+    print("  (reported alongside kappa as a metric robust to marginal imbalance)")
 
 
 # --- The disagreements, named ---
