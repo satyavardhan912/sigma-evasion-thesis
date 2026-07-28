@@ -5,6 +5,12 @@ EMPIRICALLY (executing persistence + evasion in the lab, Phase 3). The static
 label is a PREDICTION of the empirical outcome; applying identical categories
 to both is what makes the static-vs-empirical comparison (SQ4) valid.
 
+
+> **Note (post-hoc):** the inverse breadth↔evadability relationship stated below as the
+> classification prior (in "Governing heuristic" and in the Part 3 SQ3 hypothesis) was not
+> supported by the empirical SQ3 result (Section 6.3): at corpus level, breadth and
+> evadability were found to be independent. This null result is itself the SQ3 finding.
+
 ## What counts as an evasion
 A functionally-equivalent modification to the persistence action: the attacker
 changes HOW the technique is performed so a rule no longer detects it, while the
